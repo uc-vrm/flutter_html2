@@ -36,6 +36,24 @@ class Style {
   ///CSS attribute "`margin`"
   EdgeInsets margin;
 
+  /// CSS attribute "`ruby-align`"
+  ///
+  /// inherited: yes,
+  /// default: [RubyAlign.CENTER] (SPACE_AROUND currently unsupported),
+  RubyAlign rubyAlign;
+
+  /// CSS attribute "`ruby-merge`"
+  ///
+  /// inherited: yes,
+  /// default: [RubyMerge.SEPARATE],
+  RubyMerge rubyMerge;
+
+  /// CSS attribute "`ruby-position`"
+  ///
+  /// inherited: yes,
+  /// default: [RubyPosition.OVER],
+  RubyPosition rubyPosition;
+
   ///CSS attribute "`text-decoration`" -
   TextDecoration textDecoration;
 
@@ -71,6 +89,9 @@ class Style {
     this.listStyleType,
     this.padding,
     this.margin,
+    this.rubyAlign,
+    this.rubyMerge,
+    this.rubyPosition,
     this.textDecoration,
     this.textDecorationStyle,
     this.verticalAlign,
@@ -120,6 +141,9 @@ class Style {
       //TODO merge EdgeInsets
       margin: other.margin,
       //TODO merge EdgeInsets
+      rubyAlign: other.rubyAlign,
+      rubyMerge: other.rubyMerge,
+      rubyPosition: other.rubyPosition,
       textDecoration: other.textDecoration,
       textDecorationStyle: other.textDecorationStyle,
       verticalAlign: other.verticalAlign,
@@ -145,6 +169,9 @@ class Style {
       fontStyle: child.fontStyle ?? fontStyle,
       fontWeight: child.fontWeight ?? fontWeight,
       listStyleType: child.listStyleType ?? listStyleType,
+      rubyAlign: child.rubyAlign ?? rubyAlign,
+      rubyMerge: child.rubyMerge ?? rubyMerge,
+      rubyPosition: child.rubyPosition ?? rubyPosition,
       whiteSpace: child.whiteSpace ?? whiteSpace,
     );
   }
@@ -161,6 +188,9 @@ class Style {
     ListStyleType listStyleType,
     EdgeInsets padding,
     EdgeInsets margin,
+    RubyAlign rubyAlign,
+    RubyMerge rubyMerge,
+    RubyPosition rubyPosition,
     TextDecoration textDecoration,
     TextDecorationStyle textDecorationStyle,
     VerticalAlign verticalAlign,
@@ -187,6 +217,9 @@ class Style {
       listStyleType: listStyleType ?? this.listStyleType,
       padding: padding ?? this.padding,
       margin: margin ?? this.margin,
+      rubyAlign: rubyAlign ?? this.rubyAlign,
+      rubyMerge: rubyMerge ?? this.rubyMerge,
+      rubyPosition: rubyPosition ?? this.rubyPosition,
       textDecoration: textDecoration ?? this.textDecoration,
       textDecorationStyle: textDecorationStyle ?? this.textDecorationStyle,
       verticalAlign: verticalAlign ?? this.verticalAlign,
@@ -218,6 +251,11 @@ enum Display {
   INLINE,
   INLINE_BLOCK,
   LIST_ITEM,
+  RUBY,
+  RUBY_BASE,
+  RUBY_TEXT,
+  RUBY_BASE_CONTAINER,
+  RUBY_TEXT_CONTAINER,
 }
 
 class FontSize {
@@ -249,6 +287,25 @@ class FontSize {
 enum ListStyleType {
   DISC,
   DECIMAL,
+}
+
+enum RubyAlign {
+  START,
+  CENTER,
+  //UNSUPPORTED: SPACE_BETWEEN,
+  //UNSUPPORTED: SPACE_AROUND,
+}
+
+enum RubyMerge {
+  SEPARATE,
+  COLLAPSE,
+  //UNSUPPORTED: AUTO,
+}
+
+enum RubyPosition {
+  OVER,
+  UNDER,
+  INTER_CHARACTER,
 }
 
 enum VerticalAlign {

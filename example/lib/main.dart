@@ -40,7 +40,16 @@ const htmlData = """
           漢<rt>かん</rt>
           字<rt>じ</rt>
         </ruby>
-        &nbsp;is Japanese Kanji
+        &nbsp;is Japanese Kanji.
+        <br />
+        <ruby>漢<rt>ㄏㄢˋ</rt>字<rt>ㄗˋ</rt></ruby> is Traditional Chinese.
+        <br />
+        <ruby>汉<rt>hàn</rt>字<rt>zì</rt></ruby> is Simplified Chinese
+        <br />
+        <ruby>
+          <ruby>HT<rt>Hypertext</rt>M<rt>Markup</rt>L<rt>Language</rt></ruby>
+          <rt>An abstract language for describing documents and applications
+        </ruby>
       </p>
       Solve for <var>x<sub>n</sub></var>: log<sub>2</sub>(<var>x</var><sup>2</sup>+<var>n</var>) = 9<sup>3</sup>
       <p>One of the most common equations in all of physics is <var>E</var>=<var>m</var><var>c</var><sup>2</sup>.<p>

@@ -251,19 +251,131 @@ class EmptyContentElement extends ReplacedElement {
   Widget toWidget(_) => null;
 }
 
+//TODO(Sub6Resources): <ruby> formatting should adhere to
+// the most recent CSS WD specification: https://drafts.csswg.org/css-ruby/
 class RubyElement extends ReplacedElement {
   dom.Element element;
 
   RubyElement({@required this.element, String name = "ruby"})
       : super(name: name, alignment: PlaceholderAlignment.middle);
 
+  static RubyElementInfo parseRuby(dom.Node root) {
+    final RubyElementInfo info = RubyElementInfo();
+    if(root.parent.localName != 'ruby') {
+      dom.Node currentParent = root;
+      int index = 0;
+      int startIndex;
+      int savedStartIndex;
+      int lookaheadIndex;
+
+      BaseTextSegment currentBaseText;
+
+      //Start mode
+      if(index >= currentParent.children.length) {
+        //Jump to end mode
+
+      }
+
+      if(currentParent.children[index].localName == 'rt' || currentParent.children[index].localName == 'rp') {
+        //Jump to annotation mode
+
+      }
+
+      startIndex = index;
+
+      //Base mode
+      if(currentParent.children[index].localName == 'ruby' && currentParent == root) {
+        currentParent = currentParent.children[index];
+        index = 0;
+        savedStartIndex = startIndex;
+        startIndex = null;
+        //Jump to start mode
+
+      }
+
+      if(currentParent.children[index].localName == 'rt' || currentParent.children[index].localName == 'rp') {
+        BaseTextSegment newBaseTextSegment = BaseTextSegment();
+        newBaseTextSegment.baseText = List<dom.Node>();
+        for(int i = startIndex; i < index; i++) {
+          newBaseTextSegment.baseText.add(currentParent.children[i]);
+        }
+        currentBaseText = newBaseTextSegment;
+        info.baseTextSegments.add(newBaseTextSegment);
+        //Jump to annotation mode
+      }
+
+      index++;
+
+      //Base mode post-increment
+      if(index >= currentParent.children.length) {
+        //Jump to end mode
+      }
+
+      // Jump back to base mode
+
+      //Annotation mode
+      if(currentParent.children[index].localName == 'rt') {
+        final rt = currentParent.children[index];
+        AnnotationSegment annotationSegment = AnnotationSegment();
+        annotationSegment.annotation = [rt];
+        if(currentBaseText != null) {
+          annotationSegment.segment = currentBaseText;
+        }
+        info.annotationSegments.add(annotationSegment);
+        //Jump to annotation mode increment
+      }
+
+      if(currentParent.children[index].localName == 'rp') {
+        //Jump to annotation mode increment
+      }
+
+      if(currentParent.children[index] is! dom.Text || (currentParent.children[index] is dom.Text && currentParent.children[index].text.trim().isNotEmpty)) {
+        //Jump to base mode
+      }
+
+      //Annotation mode increment
+      lookaheadIndex = index + 1;
+
+      //Annotation mode white-space skipper
+      if(lookaheadIndex == currentParent.children.length) {
+        //Jump to end mode
+      }
+
+      if(currentParent.children[lookaheadIndex].localName == 'rt' || currentParent.children[lookaheadIndex].localName == 'rp') {
+        index = lookaheadIndex;
+        //Jump to annotation mode
+      }
+
+      if(currentParent.children[lookaheadIndex] is! dom.Text || (currentParent.children[lookaheadIndex] is dom.Text && currentParent.children[lookaheadIndex].text.trim().isNotEmpty)) {
+        //Jump to base mode (without incrementing index)
+      }
+      lookaheadIndex++;
+
+      //Jump to annotation mode white space skipper
+
+      //End mode
+      if(currentParent != root) {
+        index = root.children.indexOf(currentParent);
+        currentParent = root;
+        index++;
+        startIndex = savedStartIndex;
+        savedStartIndex = null;
+        //Jump to base mode post increment.
+      }
+
+    }
+
+    //End
+    return info;
+  }
+
   @override
   Widget toWidget(RenderContext context) {
-    dom.Node textNode = null;
+    dom.Node textNode;
     List<Widget> widgets = List<Widget>();
     //TODO calculate based off of parent font size.
-    final rubySize = max(9.0, context.style.fontSize.size / 2);
-    final rubyYPos = rubySize + 2;
+    final rubySize = context.style.fontSize.size / 2;
+    final rubyYPos = rubySize + 4;
     element.nodes.forEach((c) {
       if (c.nodeType == dom.Node.TEXT_NODE) {
         textNode = c;
@@ -299,6 +411,26 @@ class RubyElement extends ReplacedElement {
       children: widgets,
     );
   }
+}
+
+class RubyElementInfo {
+  List<BaseTextSegment> baseTextSegments;
+  List<AnnotationSegment> annotationSegments;
+
+  RubyElementInfo() {
+    baseTextSegments = List<BaseTextSegment>();
+    annotationSegments = List<AnnotationSegment>();
+  }
+}
+
+class BaseTextSegment {
+  List<BaseTextSegment> subSegments;
+  List<dom.Node> baseText;
+}
+
+class AnnotationSegment {
+  List<dom.Node> annotation;
+  BaseTextSegment segment;
 }
 
 ReplacedElement parseReplacedElement(dom.Element element) {
