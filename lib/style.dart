@@ -168,6 +168,17 @@ class Style {
   /// Default: Unspecified (null),
   LineHeight? lineHeight;
 
+  /// boder radius property
+  BorderRadius? borderRadius;
+
+  /// css-attribue max-lines for text
+  int? textMaxLines;
+
+  /// css-attribute text-overflow
+  TextOverflow? textOverflow;
+
+  TableBorder? tableBorder;
+
   //TODO modify these to match CSS styles
   String? before;
   String? after;
@@ -207,6 +218,10 @@ class Style {
     this.border,
     this.alignment,
     this.markerContent,
+    this.borderRadius,
+    this.textMaxLines,
+    this.textOverflow = TextOverflow.clip,
+    this.tableBorder,
   }) {
     if (this.alignment == null &&
         (display == Display.BLOCK || display == Display.LIST_ITEM)) {
@@ -278,22 +293,32 @@ class Style {
       //TODO merge border
       alignment: other.alignment,
       markerContent: other.markerContent,
+      borderRadius: other.borderRadius,
+      tableBorder: other.tableBorder,
+      textMaxLines: other.textMaxLines,
+      textOverflow: other.textOverflow,
     );
   }
 
   Style copyOnlyInherited(Style child) {
-    FontSize? finalFontSize = child.fontSize != null ?
-      fontSize != null && child.fontSize?.units == "em" ?
-        FontSize(child.fontSize!.size! * fontSize!.size!) : child.fontSize
-      : fontSize != null && fontSize!.size! < 0 ?
-        FontSize.percent(100) : fontSize;
-    LineHeight? finalLineHeight = child.lineHeight != null ?
-      child.lineHeight?.units == "length" ?
-        LineHeight(child.lineHeight!.size! / (finalFontSize == null ? 14 : finalFontSize.size!) * 1.2) : child.lineHeight
-      : lineHeight;
+    FontSize? finalFontSize = child.fontSize != null
+        ? fontSize != null && child.fontSize?.units == "em"
+            ? FontSize(child.fontSize!.size! * fontSize!.size!)
+            : child.fontSize
+        : fontSize != null && fontSize!.size! < 0
+            ? FontSize.percent(100)
+            : fontSize;
+    LineHeight? finalLineHeight = child.lineHeight != null
+        ? child.lineHeight?.units == "length"
+            ? LineHeight(child.lineHeight!.size! /
+                (finalFontSize == null ? 14 : finalFontSize.size!) *
+                1.2)
+            : child.lineHeight
+        : lineHeight;
     return child.copyWith(
-      backgroundColor: child.backgroundColor != Colors.transparent ?
-        child.backgroundColor : backgroundColor,
+      backgroundColor: child.backgroundColor != Colors.transparent
+          ? child.backgroundColor
+          : backgroundColor,
       color: child.color ?? color,
       direction: child.direction ?? direction,
       display: display == Display.NONE ? display : child.display,
@@ -307,9 +332,10 @@ class Style {
       listStyleType: child.listStyleType ?? listStyleType,
       listStylePosition: child.listStylePosition ?? listStylePosition,
       textAlign: child.textAlign ?? textAlign,
-      textDecoration: TextDecoration.combine(
-          [child.textDecoration ?? TextDecoration.none,
-            textDecoration ?? TextDecoration.none]),
+      textDecoration: TextDecoration.combine([
+        child.textDecoration ?? TextDecoration.none,
+        textDecoration ?? TextDecoration.none
+      ]),
       textShadow: child.textShadow ?? textShadow,
       whiteSpace: child.whiteSpace ?? whiteSpace,
       wordSpacing: child.wordSpacing ?? wordSpacing,
@@ -346,6 +372,10 @@ class Style {
     String? before,
     String? after,
     Border? border,
+    BorderRadius? borderRadius,
+    TableBorder? tableBorder,
+    int? textMaxLines,
+    TextOverflow? textOverflow,
     Alignment? alignment,
     String? markerContent,
   }) {
@@ -382,6 +412,10 @@ class Style {
       border: border ?? this.border,
       alignment: alignment ?? this.alignment,
       markerContent: markerContent ?? this.markerContent,
+      borderRadius: borderRadius ?? this.borderRadius,
+      tableBorder: tableBorder ?? this.tableBorder,
+      textMaxLines: textMaxLines ?? this.textMaxLines,
+      textOverflow: textOverflow ?? this.textOverflow,
     );
   }
 

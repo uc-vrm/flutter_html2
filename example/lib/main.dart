@@ -242,57 +242,107 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Html(
-          data: htmlData,
-          style: {
-            "table": Style(
-              backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+        child: Column(
+          children: [
+            Html(
+              data: htmlData,
+              style: {
+                "table": Style(
+                  backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+                ),
+                "tr": Style(
+                  border: Border(bottom: BorderSide(color: Colors.grey)),
+                ),
+                "th": Style(
+                  padding: EdgeInsets.all(6),
+                  backgroundColor: Colors.grey,
+                ),
+                "td": Style(
+                  padding: EdgeInsets.all(6),
+                  alignment: Alignment.topLeft,
+                ),
+              },
+              customRender: {
+                "table": (context, child) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child:
+                        (context.tree as TableLayoutElement).toWidget(context),
+                  );
+                }
+              },
+              customImageRenders: {
+                networkSourceMatcher(domains: ["flutter.dev"]):
+                    (context, attributes, element) {
+                  return FlutterLogo(size: 36);
+                },
+                networkSourceMatcher(domains: ["mydomain.com"]):
+                    networkImageRender(
+                  headers: {"Custom-Header": "some-value"},
+                  altWidget: (alt) => Text(alt ?? ""),
+                  loadingWidget: () => Text("Loading..."),
+                ),
+                // On relative paths starting with /wiki, prefix with a base url
+                (attr, _) =>
+                        attr["src"] != null && attr["src"]!.startsWith("/wiki"):
+                    networkImageRender(
+                        mapUrl: (url) => "https://upload.wikimedia.org" + url!),
+                // Custom placeholder image for broken links
+                networkSourceMatcher():
+                    networkImageRender(altWidget: (_) => FlutterLogo()),
+              },
+              onLinkTap: (url, _, __, ___) {
+                print("Opening $url...");
+              },
+              onImageTap: (src, _, __, ___) {
+                print(src);
+              },
+              onImageError: (exception, stackTrace) {
+                print(exception);
+              },
             ),
-            "tr": Style(
-              border: Border(bottom: BorderSide(color: Colors.grey)),
+            Container(
+              child: Html(
+                data:
+                    '<div class = "correct"><a href = "ID1">id1</a></div><div class = "incorrect"><a href = "ID2">id2</a></div><div class = "selected"><a href = "ID3">id3</a></div>',
+                shrinkWrap: true,
+                style: {
+                  "div": Style(
+                      borderRadius: BorderRadius.circular(3),
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                      margin: EdgeInsets.all(2)),
+                  "*": Style(
+                      textDecoration: TextDecoration.none,
+                      fontSize: FontSize.large,
+                      color: Colors.black),
+                  ".selected, .selected a":
+                      Style(backgroundColor: Colors.blueGrey),
+                  ".correct, .correct a": Style(backgroundColor: Colors.green),
+                  ".incorrect, .incorrect a":
+                      Style(backgroundColor: Colors.redAccent),
+                  ".incorrect *, .correct *, .selected *":
+                      Style(color: Colors.white),
+                  "div.char": Style(
+                    margin: EdgeInsets.symmetric(horizontal: 0),
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+                  ),
+                },
+              ),
             ),
-            "th": Style(
-              padding: EdgeInsets.all(6),
-              backgroundColor: Colors.grey,
-            ),
-            "td": Style(
-              padding: EdgeInsets.all(6),
-              alignment: Alignment.topLeft,
-            ),
-          },
-          customRender: {
-            "table": (context, child) {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: (context.tree as TableLayoutElement).toWidget(context),
-              );
-            }
-          },
-          customImageRenders: {
-            networkSourceMatcher(domains: ["flutter.dev"]): (context, attributes, element) {
-              return FlutterLogo(size: 36);
-            },
-            networkSourceMatcher(domains: ["mydomain.com"]): networkImageRender(
-              headers: {"Custom-Header": "some-value"},
-              altWidget: (alt) => Text(alt ?? ""),
-              loadingWidget: () => Text("Loading..."),
-            ),
-            // On relative paths starting with /wiki, prefix with a base url
-            (attr, _) => attr["src"] != null && attr["src"]!.startsWith("/wiki"):
-                networkImageRender(
-                    mapUrl: (url) => "https://upload.wikimedia.org" + url!),
-            // Custom placeholder image for broken links
-            networkSourceMatcher(): networkImageRender(altWidget: (_) => FlutterLogo()),
-          },
-          onLinkTap: (url, _, __, ___) {
-            print("Opening $url...");
-          },
-          onImageTap: (src, _, __, ___) {
-            print(src);
-          },
-          onImageError: (exception, stackTrace) {
-            print(exception);
-          },
+            Html(
+                data:
+                    "this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph this is paragraph  ",
+                style: {
+                  "*": Style(
+                    margin: EdgeInsets.all(5),
+                    //color: Colors.black,
+                    fontSize: FontSize(17),
+                    fontWeight: FontWeight.normal,
+                    textMaxLines: 2,
+                    textOverflow: TextOverflow.ellipsis,
+                  ),
+                }),
+          ],
         ),
       ),
     );
