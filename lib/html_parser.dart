@@ -795,6 +795,7 @@ class ContainerSpan extends StatelessWidget {
       width: style.width,
       padding: style.padding,
       margin: style.margin,
+      constraints: style.constraints,
       alignment: shrinkWrap ? null : style.alignment,
       child: child ??
           StyledText(
