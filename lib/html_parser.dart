@@ -267,6 +267,7 @@ class HtmlParser extends StatelessWidget {
         return render is InlineSpan
             ? render
             : WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
                 child: ContainerSpan(
                   newContext: newContext,
                   style: tree.style,
@@ -280,6 +281,7 @@ class HtmlParser extends StatelessWidget {
     //Return the correct InlineSpan based on the element type.
     if (tree.style.display == Display.BLOCK) {
       return WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
         child: ContainerSpan(
           newContext: newContext,
           style: tree.style,
