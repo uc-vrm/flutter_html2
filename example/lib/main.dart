@@ -263,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               },
               customRender: {
-                "table": (context, child) {
+                "table": (context, child, attr, ele) {
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child:

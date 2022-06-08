@@ -179,6 +179,8 @@ class Style {
 
   TableBorder? tableBorder;
 
+  BoxConstraints? constraints;
+
   //TODO modify these to match CSS styles
   String? before;
   String? after;
@@ -222,6 +224,7 @@ class Style {
     this.textMaxLines,
     this.textOverflow = TextOverflow.clip,
     this.tableBorder,
+    this.constraints,
   }) {
     if (this.alignment == null &&
         (display == Display.BLOCK || display == Display.LIST_ITEM)) {
@@ -297,6 +300,7 @@ class Style {
       tableBorder: other.tableBorder,
       textMaxLines: other.textMaxLines,
       textOverflow: other.textOverflow,
+      constraints: other.constraints,
     );
   }
 
@@ -376,6 +380,7 @@ class Style {
     TableBorder? tableBorder,
     int? textMaxLines,
     TextOverflow? textOverflow,
+    BoxConstraints? constraints,
     Alignment? alignment,
     String? markerContent,
   }) {
@@ -416,6 +421,7 @@ class Style {
       tableBorder: tableBorder ?? this.tableBorder,
       textMaxLines: textMaxLines ?? this.textMaxLines,
       textOverflow: textOverflow ?? this.textOverflow,
+      constraints: constraints ?? this.constraints,
     );
   }
 

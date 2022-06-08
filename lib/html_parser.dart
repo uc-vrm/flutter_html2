@@ -30,6 +30,8 @@ typedef OnMathError = Widget Function(
 typedef CustomRender = dynamic Function(
   RenderContext context,
   Widget parsedChild,
+  Map<String, String> attributes,
+  dom.Element element,
 );
 
 class HtmlParser extends StatelessWidget {
@@ -257,12 +259,15 @@ class HtmlParser extends StatelessWidget {
           children:
               tree.children.map((tree) => parseTree(newContext, tree)).toList(),
         ),
+        tree.attributes,
+        tree.element!,
       );
       if (render != null) {
         assert(render is InlineSpan || render is Widget);
         return render is InlineSpan
             ? render
             : WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
                 child: ContainerSpan(
                   newContext: newContext,
                   style: tree.style,
@@ -276,6 +281,7 @@ class HtmlParser extends StatelessWidget {
     //Return the correct InlineSpan based on the element type.
     if (tree.style.display == Display.BLOCK) {
       return WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
         child: ContainerSpan(
           newContext: newContext,
           style: tree.style,
@@ -791,6 +797,7 @@ class ContainerSpan extends StatelessWidget {
       width: style.width,
       padding: style.padding,
       margin: style.margin,
+      constraints: style.constraints,
       alignment: shrinkWrap ? null : style.alignment,
       child: child ??
           StyledText(
