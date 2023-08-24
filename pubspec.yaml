@@ -29,7 +29,7 @@ dependencies:
   chewie_audio: ^1.2.0
 
   # Plugins for rendering the <svg> tag.
-  flutter_svg ^2.0.0+1
+  flutter_svg: ^2.0.0+1
 
   # Plugin for rendering MathML
   flutter_math_fork: ^0.7.1
